@@ -1,3 +1,20 @@
+import datetime
+
+class Entry: #this is building the blueprint for the entry object to be used to create new entries
+    def __init__(self, content, title = None, mood = None):
+        self.date = datetime.datetime.now()
+        self.title = title
+        self.mood = mood
+        self.content = content
+
+    def view(self): #blueprint to extract previous entries 
+        print(self.date)
+        if self.title != None:
+            print(self.title)
+        if self.mood != None:
+            print(self.mood)
+        print(self.content)
+
 def word_count(): #function to get total count of words, called in section 4
     words = 0
     with open("entries.txt") as file:
@@ -6,7 +23,6 @@ def word_count(): #function to get total count of words, called in section 4
             split = stripped.split()
             words += len(split)
     return words
-
 
 def longest_line(): #function to get longest entry, called in section 4
     longest = ""
@@ -18,7 +34,6 @@ def longest_line(): #function to get longest entry, called in section 4
             if len(final) > len(longest):
                 longest = final 
     return longest
-
 
 print("Welcome to your journal. Enter 1 to Add Entry, 2 to View Entries, 3 to Keyword Search, 4 to Analyze, and 5 to Quit") #welcome message + instructions
 
@@ -32,9 +47,28 @@ except FileNotFoundError:
 while True:
     selection = input("Please enter selection.  ").strip()
     if selection == "1": # section for adding entry
-        entry = input("Please type your entry here:  ")
+        title = input("Enter title: ")
+        if title == "":
+            title = None
+        mood = input(" Enter current mood: ")
+        if mood =="":
+            mood = None
+        content = input("Please type journal entry now: ")
+        new_entry = Entry(content, title, mood)
+        if new_entry.title == None:
+            final_title = ""
+        else:
+            final_title = new_entry.title
+        if new_entry.mood == None:
+            final_mood = ""
+        else:
+            final_mood = new_entry.mood
+        joined = "_|_".join([final_title, final_mood, content])
         with open("entries.txt", "a") as file:
-            file.write(entry + "\n")
+            file.write(joined + "\n")
+                  
+
+        
     elif selection == "2": # section for viewing entries
         with open("entries.txt") as file:
             found_entry = False
