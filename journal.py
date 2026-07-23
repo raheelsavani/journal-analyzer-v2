@@ -69,7 +69,8 @@ while True:
             final_mood = ""
         else:
             final_mood = new_entry.mood
-        joined = "_|_".join([final_title, final_mood, content])
+        timestamp = new_entry.date.strftime("%m/%d/%y  %I:%M %p")
+        joined = "_|_".join([timestamp, final_title, final_mood, content])
         with open("entries.txt", "a") as file:
             file.write(joined + "\n")
                   
@@ -81,10 +82,11 @@ while True:
             for line in file:
                 stripped = line.strip()
                 split_line = stripped.split("_|_")
-                title = split_line[0]
-                mood = split_line[1]
-                content = split_line[2]
-                print(f"{place_holder('title', title)}. {place_holder('mood', mood)}. {content} ")
+                timestamp = split_line[0]
+                title = split_line[1]
+                mood = split_line[2]
+                content = split_line[3]
+                print(f"{timestamp}  {place_holder('title', title)}. {place_holder('mood', mood)}. {content} ")
                 found_entry = True
         if found_entry == False:
             print("No entries found")
