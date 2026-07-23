@@ -15,6 +15,12 @@ class Entry: #this is building the blueprint for the entry object to be used to 
             print(self.mood)
         print(self.content)
 
+def place_holder(variable,value): # function to add placeholder text in case of blank title/mood input
+    if value == "":
+        return f"{variable} not provided"
+    else:
+        return value
+
 def word_count(): #function to get total count of words, called in section 4
     words = 0
     with open("entries.txt") as file:
@@ -73,7 +79,12 @@ while True:
         with open("entries.txt") as file:
             found_entry = False
             for line in file:
-                print(line)
+                stripped = line.strip()
+                split_line = stripped.split("_|_")
+                title = split_line[0]
+                mood = split_line[1]
+                content = split_line[2]
+                print(f"{place_holder('title', title)}. {place_holder('mood', mood)}. {content} ")
                 found_entry = True
         if found_entry == False:
             print("No entries found")
