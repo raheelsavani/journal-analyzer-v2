@@ -1,25 +1,36 @@
 import datetime
 
 class Entry: #this is building the blueprint for the entry object to be used to create new entries
-    def __init__(self, content, title = None, mood = None):
-        self.date = datetime.datetime.now()
+    def __init__(self, content, title = None, mood = None, date = None):
+        if date == None:
+            self.date = datetime.datetime.now()
+        else:
+            self.date = date
         self.title = title
         self.mood = mood
         self.content = content
 
     def view(self): #blueprint to extract previous entries 
         print(self.date)
-        if self.title != None:
-            print(self.title)
-        if self.mood != None:
-            print(self.mood)
+        if self.title is None or self.title == "":
+            print("Title not provided")
+        else:
+            print(f"Title: {self.title}")
+        if self.mood is None or self.mood == "":
+            print("Mood not provided")
+        else:
+            print(f"Mood: {self.mood}")
         print(self.content)
 
-def place_holder(variable,value): # function to add placeholder text in case of blank title/mood input
-    if value == "":
-        return f"{variable} not provided"
-    else:
-        return value
+    @classmethod
+    def from_line(cls, line):
+        stripped = line.strip()
+        split = stripped.split("_|_")
+        date = split[0]
+        title = split[1]
+        mood = split[2]
+        content = split[3]
+        return cls(content, title, mood, date)
 
 def word_count(): #function to get total count of words, called in section 4
     words = 0
@@ -80,13 +91,9 @@ while True:
         with open("entries.txt") as file:
             found_entry = False
             for line in file:
-                stripped = line.strip()
-                split_line = stripped.split("_|_")
-                timestamp = split_line[0]
-                title = split_line[1]
-                mood = split_line[2]
-                content = split_line[3]
-                print(f"{timestamp}  {place_holder('title', title)}. {place_holder('mood', mood)}. {content} ")
+                new_entry = Entry.from_line(line)
+                new_entry.view()
+                print("")
                 found_entry = True
         if found_entry == False:
             print("No entries found")
