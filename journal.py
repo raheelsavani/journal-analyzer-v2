@@ -99,14 +99,19 @@ while True:
             print("No entries found")
     elif selection == "3": # section for searching by keyword
         kw = input("Enter keyword:  ").lower()
+        if kw == "":
+            print("Cannot search using a blank keyword")
+            continue
         with open("entries.txt") as file:
             flag = False
             for line in file:
-                if kw in line.lower():
+                new_entry = Entry.from_line(line)
+                if kw in new_entry.title.lower() or kw in new_entry.mood.lower() or kw in new_entry.content.lower():
                     flag = True
-                    print(line)
+                    new_entry.view()
+                    print("") #this is to make sure the next print wont be hugging the bottom of this one
         if flag == False:
-                print("Keyword not found.")
+            print("Keyword not found.")
     elif selection == "4": #section for running analysis 
         print(f"Total Word Count = {word_count()}. Longest Entry = {longest_line()}.")
     elif selection == "5": #section to end program
