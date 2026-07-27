@@ -32,25 +32,15 @@ class Entry: #this is building the blueprint for the entry object to be used to 
         content = split[3]
         return cls(content, title, mood, date)
 
-def word_count(): #function to get total count of words, called in section 4
-    words = 0
-    with open("entries.txt") as file:
-        for line in file:
-            stripped = line.strip()
-            split = stripped.split()
-            words += len(split)
+def word_count(content): #function to get total count of words in a line, called in section 4
+    words = len(content.split())
     return words
 
-def longest_line(): #function to get longest entry, called in section 4
-    longest = ""
-    with open("entries.txt") as file:
-        for line in file:
-            stripped = line.strip()
-            lst = stripped.split()
-            final = " ".join(lst)
-            if len(final) > len(longest):
-                longest = final 
-    return longest
+def longest_line(content): #function that cleans up a line, called in section 4 
+    stripped = content.strip()
+    lst = stripped.split()
+    final = " ".join(lst)
+    return final
 
 print("Welcome to your journal. Enter 1 to Add Entry, 2 to View Entries, 3 to Keyword Search, 4 to Analyze, and 5 to Quit") #welcome message + instructions
 
@@ -84,9 +74,6 @@ while True:
         joined = "_|_".join([timestamp, final_title, final_mood, content])
         with open("entries.txt", "a") as file:
             file.write(joined + "\n")
-                  
-
-        
     elif selection == "2": # section for viewing entries
         with open("entries.txt") as file:
             found_entry = False
@@ -112,8 +99,16 @@ while True:
                     print("") #this is to make sure the next print wont be hugging the bottom of this one
         if flag == False:
             print("Keyword not found.")
-    elif selection == "4": #section for running analysis 
-        print(f"Total Word Count = {word_count()}. Longest Entry = {longest_line()}.")
+    elif selection == "4": #section for running analysis
+        with open("entries.txt") as file:
+            words = 0
+            longest = ""
+            for line in file:
+                new_entry = Entry.from_line(line)
+                words += word_count(new_entry.content)
+                if len(longest_line(new_entry.content)) > len(longest):
+                    longest = longest_line(new_entry.content)
+        print(f"Total Word Count = {words}. Longest Entry = {longest}.")
     elif selection == "5": #section to end program
         print("Quitting Program")
         break
